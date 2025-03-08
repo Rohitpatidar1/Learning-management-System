@@ -25,6 +25,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useEditCourseMutation,
   useGetCreatorCoursesQuery,
+  usePublishCourseMutation,
 } from "@/features/api/courseApi";
 import { toast } from "sonner";
 import { useGetCourseByIdQuery } from "@/features/api/courseApi";
@@ -47,7 +48,11 @@ function CourseTab() {
     data: courseByIdData,
     isLoading: courseByIdLoading,
     refetch,
-  } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
+  } = useGetCourseByIdQuery(courseId, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  const [publishCourse, {}] = usePublishCourseMutation();
 
   // const [publishCourse, {}] = usePublishCourseMutation();
 
@@ -113,6 +118,18 @@ function CourseTab() {
 
     await editCourse({ formData: formdata, courseId });
   };
+  const publishStatusHandler = async (action) => {
+    try {
+      const response = await publishCourse({ courseId, publish: action }); // ✅ Corrected
+      if (response.data) {
+        toast.success(response.data.message);
+        refetch(); // ✅ Publish status update hone ke baad data refetch
+      }
+    } catch (error) {
+      toast.error("Failed to publish or unpublish course");
+    }
+  };
+
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || "Course updated successfully");

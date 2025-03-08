@@ -53,9 +53,11 @@ function Navbar() {
         {/* Logo Section */}
         <div className="flex items-center gap-2">
           <School size={30} />
-          <h1 className="hidden md:block font-extrabold text-2xl">
-            E-Learning
-          </h1>
+          <Link to="/">
+            <h1 className="hidden md:block font-extrabold text-2xl">
+              E-Learning
+            </h1>
+          </Link>
         </div>
 
         {/* User Menu */}
@@ -146,6 +148,7 @@ const MobileNavbar = () => {
           <SheetTitle className="text-black dark:text-white">
             E-learning
           </SheetTitle>
+
           <DarkMode />
         </SheetHeader>
 

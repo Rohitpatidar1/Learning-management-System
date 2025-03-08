@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Course } from "../models/course.model.js"; // ✅ Fix: Course model import
 import { Lecture } from "../models/lecture.model.js";
 import {
@@ -270,5 +271,41 @@ export const getLectureById = async (req, res) => {
     return res.status(500).json({
       message: "faild to get tecture",
     });
+  }
+};
+
+//publish unpublish course logic
+export const togglePublishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { publish } = req.query;
+
+    // Validate courseId
+    if (!mongoose.Types.ObjectId.isValid(courseId)) {
+      return res.status(400).json({ message: "Invalid Course ID" });
+    }
+
+    // Validate publish query
+    if (publish !== "true" && publish !== "false") {
+      return res.status(400).json({
+        message: "Invalid value for 'publish'. Use 'true' or 'false'.",
+      });
+    }
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    // Ensure publish is a boolean value
+    course.isPublished = publish === "true";
+    await course.save();
+
+    return res.status(200).json({
+      message: `Course ${course.isPublished ? "published" : "unpublished"}`,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Failed to update status" });
   }
 };

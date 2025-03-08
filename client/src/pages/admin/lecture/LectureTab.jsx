@@ -40,7 +40,7 @@ function LectureTab() {
   useEffect(() => {
     if (lecture) {
       setLectureTitle(lecture.lectureTitle);
-      // setIsFree(lecture.isPreviewFree);
+      setIsFree(lecture.isPreviewFree);
       setuploadVideInfo(lecture.videoInfo);
     }
   }, [lecture]);
