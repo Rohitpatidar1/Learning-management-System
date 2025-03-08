@@ -20,7 +20,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:5175", "http://localhost:5173"],
+    origin: ["http://localhost:5176", "http://localhost:5175"],
     credentials: true, // ✅ Bas ek baar likhna hai
   })
 );

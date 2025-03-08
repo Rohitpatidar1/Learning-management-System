@@ -3,7 +3,7 @@ import Course from "./Course";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function MyLearning() {
-  const myLearningCourse = [1, 2, 3]; // Dummy course IDs (Replace with actual course objects)
+  const myLearningCourse = []; // Dummy course IDs (Replace with actual course objects)
   const isLoading = false;
 
   return (

@@ -166,6 +166,24 @@ export const createLecture = async (req, res) => {
   }
 };
 
+export const getPublishedCourse = async (_, res) => {
+  try {
+    const courses = await Course.find({ isPublished: true }).populate({
+      path: "creator", // ✅ Fix typo
+      select: "name photoUrl",
+    });
+
+    if (!courses || courses.length === 0) {
+      return res.status(404).json({ message: "No published courses found" });
+    }
+
+    return res.status(200).json({ courses });
+  } catch (error) {
+    console.error("Error fetching published courses:", error);
+    return res.status(500).json({ message: "Failed to get published courses" });
+  }
+};
+
 // Get Lectures of a Course
 export const getCourseLecture = async (req, res) => {
   try {
