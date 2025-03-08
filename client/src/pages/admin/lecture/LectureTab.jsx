@@ -17,6 +17,7 @@ import axios from "axios";
 
 import {
   useEditLectureMutation,
+  useGetLectureByIdQuery,
   useRemoveLectureMutation,
 } from "@/features/api/courseApi";
 import { useParams } from "react-router-dom";
@@ -33,6 +34,16 @@ function LectureTab() {
   // const [isLoading, setIsLoading] = useState(false);
   const params = useParams();
   const { courseId, lectureId } = params;
+  const { data: lectureData } = useGetLectureByIdQuery(lectureId);
+
+  const lecture = lectureData?.lecture;
+  useEffect(() => {
+    if (lecture) {
+      setLectureTitle(lecture.lectureTitle);
+      // setIsFree(lecture.isPreviewFree);
+      setuploadVideInfo(lecture.videoInfo);
+    }
+  }, [lecture]);
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
