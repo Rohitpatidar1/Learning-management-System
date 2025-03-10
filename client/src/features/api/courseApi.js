@@ -4,7 +4,7 @@ export const COURSE_API = "http://localhost:8080/api/v1/course";
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
-  tagTypes: ["refetch-Creator_course", "Refetch_Lecture"],
+  tagTypes: ["refetch-Creator_Course", "Refetch_Lecture", "Refetch_Lecture"],
   baseQuery: fetchBaseQuery({
     baseUrl: COURSE_API,
     credentials: "include", // Ensure authentication works
