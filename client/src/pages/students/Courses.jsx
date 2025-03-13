@@ -3,17 +3,11 @@ import React from "react";
 import Course from "./Course";
 import { useGetPublishedCourseQuery } from "@/features/api/courseApi";
 
-// const courses = [1, 2, 3, 4, 5, 6, 7, 8];
-
 function Courses() {
-  // const isLoading = false;
-  const {
-    data: data,
-    isLoading,
-    isError,
-    isSuccess,
-  } = useGetPublishedCourseQuery();
-  if (isError) return <h1>some error occurred while fetching courses</h1>;
+  const { data, isLoading, isError } = useGetPublishedCourseQuery();
+  console.log(isError);
+
+  if (isError) return <h1>Some error occurred while fetching courses</h1>;
 
   return (
     <div className="bg-gray-50">
@@ -24,9 +18,8 @@ function Courses() {
             ? Array.from({ length: 8 }).map((_, index) => (
                 <CourseSkeleton key={index} />
               ))
-            : data?.courses &&
-              data.courses.map((course, index) => (
-                <Course key={index} course={course} />
+            : data?.courses?.map((course) => (
+                <Course key={course._id} course={course} />
               ))}
         </div>
       </div>

@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 import mediaRoute from "./routes/media.route.js";
+import purchaseRoute from "./routes/purchaseCourse.route.js";
 
 dotenv.config();
 
@@ -15,13 +16,20 @@ connectDB();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+); // Preserve rawBody for webhook verification
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:5176", "http://localhost:5175"],
-    credentials: true, // ✅ Bas ek baar likhna hai
+    origin: ["http://localhost:5174", "http://localhost:5176"],
+    credentials: true,
   })
 );
 
@@ -29,15 +37,13 @@ app.use(
 app.use("/api/v1/media", mediaRoute);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/course", courseRoute);
+app.use("/api/v1/purchase", purchaseRoute);
 
 app.get("/home", (_, res) => {
-  res.status(200).json({
-    success: true,
-    message: "hello Programmer",
-  });
+  res.status(200).json({ success: true, message: "Hello Programmer" });
 });
 
-// ✅ Global Error Handling (Server Crash Fix)
+// Global Error Handling
 process.on("uncaughtException", (err) => {
   console.error("Unhandled Exception:", err);
 });

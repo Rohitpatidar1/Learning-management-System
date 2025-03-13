@@ -11,9 +11,13 @@ import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
 import React from "react";
 import ReactPlayer from "react-player";
 import BuyCourseButton from "@/components/BuyCourseButton";
+import { useParams } from "react-router-dom";
 
 const CourseDetail = () => {
+  const params = useParams();
+  const courseId = String(params.courseId || ""); // ✅ Handling undefined case
   const purchasedCourse = false;
+
   return (
     <div className="space-y-5">
       <div className="bg-[#2D2F31] text-white">
@@ -47,7 +51,11 @@ const CourseDetail = () => {
                 (lecture, idx) => (
                   <div key={idx} className="flex items-center gap-3 text-sm">
                     <span>
-                      {true ? <PlayCircle size={14} /> : <Lock size={14} />}
+                      {purchasedCourse ? (
+                        <PlayCircle size={14} />
+                      ) : (
+                        <Lock size={14} />
+                      )}
                     </span>
                     <p>{lecture}</p>
                   </div>
@@ -74,7 +82,7 @@ const CourseDetail = () => {
               {purchasedCourse ? (
                 <Button>Continue Course</Button>
               ) : (
-                <BuyCourseButton />
+                <BuyCourseButton courseId={courseId} /> // ✅ Passing correct courseId
               )}
             </CardFooter>
           </Card>

@@ -18,12 +18,14 @@ const coursePurchaseSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "completed", "failed"], // Fixed typo
+      enum: ["pending", "completed", "failed"],
       default: "pending",
     },
     paymentId: {
       type: String,
-      required: true,
+      required: function () {
+        return this.status === "completed"; // ✅ Only required if payment is successful
+      },
     },
   },
   { timestamps: true }

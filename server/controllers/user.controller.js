@@ -120,54 +120,6 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// export const updateProfile = async (req, res) => {
-//   try {
-//     const userId = req.id;
-//     const { name } = req.body;
-//     const profilePhoto = req.file; // `req.file` yahan aayega multer se
-
-//     const user = await User.findById(userId);
-//     if (!user) {
-//       return res.status(404).json({
-//         success: false,
-//         message: "User not found",
-//       });
-//     }
-
-//     let photoUrl = user.photoUrl; // Default old image
-
-//     if (profilePhoto) {
-//       // Agar purani image hai to delete karo
-//       if (user.photoUrl) {
-//         const publicId = user.photoUrl.split("/").pop().split(".")[0];
-//         await deleteMediaFromCloudinary(publicId);
-//       }
-
-//       // Naya image upload karo
-//       const cloudResponse = await uploadMedia(profilePhoto.path);
-//       photoUrl = cloudResponse.secure_url;
-//     }
-
-//     const updateData = { name, photoUrl };
-
-//     const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
-//       new: true,
-//     }).select("-password");
-
-//     return res.status(200).json({
-//       success: true,
-//       user: updatedUser,
-//       message: "Profile updated successfully",
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({
-//       success: false,
-//       message: "Failed to update profile",
-//     });
-//   }
-// };
-
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;

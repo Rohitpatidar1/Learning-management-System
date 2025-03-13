@@ -18,12 +18,14 @@ import upload from "../utils/multer.js";
 const router = express.Router();
 
 router.route("/").post(isAuthenticated, createCourse);
-router.route("/published-courses").get(isAuthenticated, getPublishedCourse);
+router.route("/published-courses").get(getPublishedCourse);
+
 router.route("/get").get(isAuthenticated, getCreatorCourses);
 router
   .route("/:courseId")
   .put(isAuthenticated, upload.single("courseThumbnail"), editCourse);
 router.route("/:courseId").get(isAuthenticated, getCourseById);
+
 router.route("/:courseId/lecture").post(isAuthenticated, createLecture);
 
 router.route("/:courseId/lecture").get(isAuthenticated, getCourseLecture);
@@ -36,7 +38,6 @@ router.route("/lecture/:lectureId").delete(isAuthenticated, removeLecture);
 
 router.route("/lecture/:lectureId").get(isAuthenticated, getLectureById);
 
-// router.route("/:courseId").put(isAuthenticated,togglePublishCourse)
 router.route("/publish/:courseId").put(isAuthenticated, togglePublishCourse);
 
 export default router;
