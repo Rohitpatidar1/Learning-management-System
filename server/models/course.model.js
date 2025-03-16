@@ -19,7 +19,7 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: [
-        "Next Js",
+        "Next JS",
         "Data Science",
         "Frontend Development",
         "Full Stack Development",

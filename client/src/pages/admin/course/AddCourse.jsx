@@ -68,7 +68,7 @@ function AddCourse() {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Category</SelectLabel>
-                <SelectItem value="Next Js">Next Js</SelectItem>
+                <SelectItem value="Next JS">Next JS</SelectItem>
                 <SelectItem value="Data Science">Data Science</SelectItem>
                 <SelectItem value="Frontend Development">
                   Frontend Development

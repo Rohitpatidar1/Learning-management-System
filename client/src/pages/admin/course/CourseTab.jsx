@@ -210,7 +210,7 @@ function CourseTab() {
                     <SelectItem value="Frontend Development">
                       Frontend Development
                     </SelectItem>
-                    <SelectItem value="Fullstack Development">
+                    <SelectItem value="Full Stack Development">
                       Fullstack Development
                     </SelectItem>
                     <SelectItem value="MERN Stack Development">

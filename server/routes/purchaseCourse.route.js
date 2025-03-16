@@ -3,6 +3,8 @@ import isAuthenticated from "../middlewares/isAuthenticated.js";
 import {
   createCheckoutSession,
   razorpayWebhook,
+  getCourseDetailWithPurchaseStatus,
+  getAllPurchasedCourse,
 } from "../controllers/coursePurchase.controller.js";
 
 const router = express.Router();
@@ -21,16 +23,12 @@ router
   .route("/checkout/create-checkout-session")
   .post(isAuthenticated, createCheckoutSession);
 
-router.route("/webhook").post(razorpayWebhook); 
+router.route("/webhook").post(razorpayWebhook);
 
-// ✅ Placeholder for future implementation
-router.route("/course/:courseId/detail-with-status").get((req, res) => {
-  res.status(501).json({ message: "Not implemented yet" });
-});
+router
+  .route("/course/:courseId/detail-with-status")
+  .get(isAuthenticated, getCourseDetailWithPurchaseStatus);
 
-// ✅ Placeholder for future implementation
-router.route("/").get((req, res) => {
-  res.status(501).json({ message: "Not implemented yet" });
-});
+router.route("/").get(isAuthenticated, getAllPurchasedCourse);
 
 export default router;
