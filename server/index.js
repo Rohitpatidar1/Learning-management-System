@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mediaRoute from "./routes/media.route.js";
 import purchaseRoute from "./routes/purchaseCourse.route.js";
-
+import courseProgressRoute from "./routes/courseProgress.route.js";
 dotenv.config();
 
 // Database connection
@@ -38,6 +38,7 @@ app.use("/api/v1/media", mediaRoute);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/purchase", purchaseRoute);
+app.use("/api/v1/progress", courseProgressRoute);
 
 app.get("/home", (_, res) => {
   res.status(200).json({ success: true, message: "Hello Programmer" });

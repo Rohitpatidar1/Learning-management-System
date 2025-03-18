@@ -38,6 +38,7 @@ const CourseDetail = () => {
       navigate(`/course-progress/${courseId}`);
     }
   };
+  console.log(purchased);
 
   return (
     <div className="space-y-10">

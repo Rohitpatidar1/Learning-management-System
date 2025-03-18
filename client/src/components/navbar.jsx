@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import { toast } from "sonner";
 import { useLogoutUserMutation } from "@/features/api/authApi";
 import { useSelector } from "react-redux";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 function Navbar() {
   const { user } = useSelector((Store) => Store.auth);
@@ -48,29 +49,25 @@ function Navbar() {
   }, [isSuccess, data, navigate]);
 
   return (
-    <div className="h-16 dark:bg-[#0a0a0a] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-4 h-full">
-        {/* Logo Section */}
+    <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
+      {/* Desktop */}
+      <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
         <div className="flex items-center gap-2">
-          <School size={30} />
+          <School size={"30"} />
           <Link to="/">
             <h1 className="hidden md:block font-extrabold text-2xl">
               E-Learning
             </h1>
           </Link>
         </div>
-
-        {/* User Menu */}
-        <div className="flex items-center gap-6">
+        {/* User icons and dark mode icon  */}
+        <div className="flex items-center gap-8">
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Avatar>
                   <AvatarImage
-                    src={
-                      user.photoUrl ||
-                      "https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
-                    }
+                    src={user?.photoUrl || "https://github.com/shadcn.png"}
                     alt="@shadcn"
                   />
                   <AvatarFallback>CN</AvatarFallback>
@@ -81,48 +78,41 @@ function Navbar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <Link to="myLearning">My Learning</Link>
+                    <Link to="myLearning">My learning</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <Link to="Profile">Edit Profile</Link>
+                    {" "}
+                    <Link to="profile">Edit Profile</Link>{" "}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={logoutHandler}>
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                {user.role === "instructure" ? (
-                  <DropdownMenuItem>Dashboard</DropdownMenuItem>
-                ) : (
-                  ""
+                {user?.role === "instructure" && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <Link to="/admin/dashboard">Dashboard</Link>
+                    </DropdownMenuItem>
+                  </>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <div className="flex items-center gap-4">
-              <Button
-                variant="outline"
-                className="px-4 py-2"
-                onClick={() => navigate("/login")}
-              >
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => navigate("/login")}>
                 Login
               </Button>
-              <Button
-                className="px-4 py-2 bg-black text-white hover:bg-gray-800"
-                onClick={() => navigate("/login")}
-              >
-                Signup
-              </Button>
+              <Button onClick={() => navigate("/login")}>Signup</Button>
             </div>
           )}
           <DarkMode />
         </div>
-
-        {/* Mobile Navbar */}
       </div>
-      <div className="md:hidden flex items-center gap-4">
-        <h1 className="font-extrabold text-2xl">E-Learning</h1>
-        <MobileNavbar />
+      {/* Mobile device  */}
+      <div className="flex md:hidden items-center justify-between px-4 h-full">
+        <h1 className="font-extrabold text-2xl">E-learning</h1>
+        <MobileNavbar user={user} />
       </div>
     </div>
   );
@@ -130,55 +120,46 @@ function Navbar() {
 
 export default Navbar;
 
-const MobileNavbar = () => {
-  const role = "instructor";
+const MobileNavbar = ({ user }) => {
+  const navigate = useNavigate();
+
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button
           size="icon"
-          className="rounded-full bg-gray-200 hover:bg-gray-300"
+          className="rounded-full hover:bg-gray-200"
+          variant="outline"
         >
-          <Menu size={20} />
+          <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent className="bg-white dark:bg-gray-900 flex flex-col p-4">
-        {/* Header */}
+      <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
-          <SheetTitle className="text-black dark:text-white">
-            E-learning
+          <SheetTitle>
+            {" "}
+            <Link to="/">E-Learning</Link>
           </SheetTitle>
-
           <DarkMode />
         </SheetHeader>
-
-        {/* Separator */}
-        <div className="border-b border-gray-300 dark:border-gray-700 my-2" />
-
-        {/* Navigation */}
-        <nav className="flex flex-col space-y-4 text-black dark:text-white">
-          <span className="cursor-pointer hover:text-gray-500">
-            My Learning
-          </span>
-          <span className="cursor-pointer hover:text-gray-500">
-            Edit Profile
-          </span>
-          <span className="cursor-pointer hover:text-red-500">Log Out</span>
+        <Separator className="mr-2" />
+        <nav className="flex flex-col space-y-4">
+          <Link to="/myLearning">My Learning</Link>
+          <Link to="/profile">Edit Profile</Link>
+          <p>Log out</p>
         </nav>
-        {role === "instructor" && (
-          <SheetFooter className="flex justify-center">
+        {user?.role === "instructure" && (
+          <SheetFooter>
             <SheetClose asChild>
               <Button
                 type="submit"
-                className="bg-black text-white hover:bg-gray-900"
+                // onClick={() => navigate("/admin/dashboard")}
               >
-                Dashboard
+                <Link to="/admin/dashboard">Dashboard</Link>
               </Button>
             </SheetClose>
           </SheetFooter>
         )}
-
-        {/* Footer */}
       </SheetContent>
     </Sheet>
   );

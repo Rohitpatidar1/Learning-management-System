@@ -1,60 +1,90 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetPurchasedCoursesQuery } from "@/features/api/purchaseApi";
 import React from "react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-function Dashboard() {
+const Dashboard = () => {
+  const { data, isSuccess, isError, isLoading } = useGetPurchasedCoursesQuery();
+
+  if (isLoading) return <h1>Loading...</h1>;
+  if (isError)
+    return <h1 className="text-red-500">Failed to get purchased course</h1>;
+
+  //
+  const { purchasedCourse } = data || [];
+
+  const courseData = purchasedCourse.map((course) => ({
+    name: course.courseId.courseTitle,
+    price: course.courseId.coursePrice,
+  }));
+
+  const totalRevenue = purchasedCourse.reduce(
+    (acc, element) => acc + (element.amount || 0),
+    0
+  );
+
+  const totalSales = purchasedCourse.length;
   return (
-    <div className="p-6">
-      {/* Dashboard Heading */}
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <CardHeader>
+          <CardTitle>Total Sales</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-3xl font-bold text-blue-600">{totalSales}</p>
+        </CardContent>
+      </Card>
 
-      {/* Stats Cards Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {/* Card 1 */}
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition duration-300">
-          <h2 className="text-xl font-semibold text-gray-700">Total Courses</h2>
-          <p className="text-3xl font-bold text-blue-600 mt-2">25</p>
-        </div>
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300">
+        <CardHeader>
+          <CardTitle>Total Revenue</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-3xl font-bold text-blue-600">{totalRevenue}</p>
+        </CardContent>
+      </Card>
 
-        {/* Card 2 */}
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition duration-300">
-          <h2 className="text-xl font-semibold text-gray-700">
-            Students Enrolled
-          </h2>
-          <p className="text-3xl font-bold text-green-600 mt-2">1200</p>
-        </div>
-
-        {/* Card 3 */}
-        <div className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition duration-300">
-          <h2 className="text-xl font-semibold text-gray-700">
-            Active Instructors
-          </h2>
-          <p className="text-3xl font-bold text-yellow-500 mt-2">15</p>
-        </div>
-      </div>
-
-      {/* Recent Activities */}
-      <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-          Recent Activities
-        </h2>
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <div className="text-gray-600">New Course Added: React Basics</div>
-            <span className="text-sm text-gray-500">2 hours ago</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="text-gray-600">
-              Student Enrollment: Alice Johnson
-            </div>
-            <span className="text-sm text-gray-500">1 day ago</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <div className="text-gray-600">Instructor Updated: Michael Lee</div>
-            <span className="text-sm text-gray-500">3 days ago</span>
-          </div>
-        </div>
-      </div>
+      {/* Course Prices Card */}
+      <Card className="shadow-lg hover:shadow-xl transition-shadow duration-300 col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold text-gray-700">
+            Course Prices
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={courseData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis
+                dataKey="name"
+                stroke="#6b7280"
+                angle={-30} // Rotated labels for better visibility
+                textAnchor="end"
+                interval={0} // Display all labels
+              />
+              <YAxis stroke="#6b7280" />
+              <Tooltip formatter={(value, name) => [`₹${value}`, name]} />
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke="#4a90e2" // Changed color to a different shade of blue
+                strokeWidth={3}
+                dot={{ stroke: "#4a90e2", strokeWidth: 2 }} // Same color for the dot
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
     </div>
   );
-}
+};
 
 export default Dashboard;
