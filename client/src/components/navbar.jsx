@@ -1,4 +1,4 @@
-import { School, Menu, Store } from "lucide-react";
+import { School, Menu } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +21,6 @@ import {
 } from "./ui/sheet";
 import DarkMode from "@/DarkModeo";
 import { Link, useNavigate } from "react-router-dom";
-// import { useLoginUserMutation } from "@/features/api/authapi";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useLogoutUserMutation } from "@/features/api/authApi";
@@ -35,7 +34,7 @@ function Navbar() {
 
   const logoutHandler = async () => {
     try {
-      await logoutUser(); // ✅ Ensure API is awaited
+      await logoutUser();
     } catch (error) {
       toast.error("Logout failed");
     }
@@ -60,7 +59,7 @@ function Navbar() {
             </h1>
           </Link>
         </div>
-        {/* User icons and dark mode icon  */}
+
         <div className="flex items-center gap-8">
           {user ? (
             <DropdownMenu>
@@ -77,22 +76,23 @@ function Navbar() {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Link to="myLearning">My learning</Link>
+                  <DropdownMenuItem asChild>
+                    <Link to="/myLearning">My learning</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    {" "}
-                    <Link to="profile">Edit Profile</Link>{" "}
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">Edit Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={logoutHandler}>
+                  <DropdownMenuItem onSelect={logoutHandler}>
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                {user?.role === "instructure" && (
+                {user?.role === "instructor" && (
                   <>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      <Link to="/admin/dashboard">Dashboard</Link>
+                    <DropdownMenuItem
+                      onSelect={() => navigate("/admin/dashboard")}
+                    >
+                      Dashboard
                     </DropdownMenuItem>
                   </>
                 )}
@@ -109,10 +109,11 @@ function Navbar() {
           <DarkMode />
         </div>
       </div>
-      {/* Mobile device  */}
+
+      {/* Mobile */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
         <h1 className="font-extrabold text-2xl">E-learning</h1>
-        <MobileNavbar user={user} />
+        <MobileNavbar user={user} logoutHandler={logoutHandler} />
       </div>
     </div>
   );
@@ -120,7 +121,7 @@ function Navbar() {
 
 export default Navbar;
 
-const MobileNavbar = ({ user }) => {
+const MobileNavbar = ({ user, logoutHandler }) => {
   const navigate = useNavigate();
 
   return (
@@ -137,25 +138,23 @@ const MobileNavbar = ({ user }) => {
       <SheetContent className="flex flex-col">
         <SheetHeader className="flex flex-row items-center justify-between mt-2">
           <SheetTitle>
-            {" "}
             <Link to="/">E-Learning</Link>
           </SheetTitle>
           <DarkMode />
         </SheetHeader>
-        <Separator className="mr-2" />
-        <nav className="flex flex-col space-y-4">
+        <Separator className="mr-2 mt-2" />
+        <nav className="flex flex-col space-y-4 mt-4">
           <Link to="/myLearning">My Learning</Link>
           <Link to="/profile">Edit Profile</Link>
-          <p>Log out</p>
+          <button onClick={logoutHandler} className="text-left">
+            Log out
+          </button>
         </nav>
-        {user?.role === "instructure" && (
-          <SheetFooter>
+        {user?.role === "instructor" && (
+          <SheetFooter className="mt-auto">
             <SheetClose asChild>
-              <Button
-                type="submit"
-                // onClick={() => navigate("/admin/dashboard")}
-              >
-                <Link to="/admin/dashboard">Dashboard</Link>
+              <Button onClick={() => navigate("/admin/dashboard")}>
+                Dashboard
               </Button>
             </SheetClose>
           </SheetFooter>
