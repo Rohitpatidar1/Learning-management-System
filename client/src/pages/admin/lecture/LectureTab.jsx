@@ -22,7 +22,8 @@ import {
 } from "@/features/api/courseApi";
 import { useParams } from "react-router-dom";
 
-const MEDIA_API = "http://localhost:8080/api/v1/media";
+const MEDIA_API =
+  "http://learning-management-system-j7bb.onrender.com/api/v1/media";
 
 function LectureTab() {
   const [lectureTitle, setLectureTitle] = useState("");
