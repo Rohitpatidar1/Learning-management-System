@@ -46,61 +46,74 @@ const CreateLecture = () => {
   console.log(lectureData);
 
   return (
-    <div className="flex-1 mx-10">
-      <div className="mb-4">
-        <h1 className="font-bold text-xl">
-          Let's add lectures, add some basic details for your new lecture
-        </h1>
-        <p className="text-sm">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Possimus,
-          laborum!
+    <div className="flex-1 mx-10 p-8 bg-white rounded-lg shadow-lg">
+      <div className="mb-6">
+        <h1 className="font-bold text-2xl text-gray-900">Let's add lectures</h1>
+        <p className="text-sm text-gray-600">
+          Add some basic details for your new lecture. Provide a meaningful
+          title.
         </p>
       </div>
-      <div className="space-y-4">
-        <div>
-          <Label>Title</Label>
+
+      <div className="space-y-6">
+        <div className="space-y-2">
+          <Label className="text-lg font-medium text-gray-700">Title</Label>
           <Input
             type="text"
             value={lectureTitle}
             onChange={(e) => setLectureTitle(e.target.value)}
-            placeholder="Your Title Name"
+            placeholder="Enter Lecture Title"
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
           />
         </div>
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-4 mt-4">
           <Button
             variant="outline"
             onClick={() => navigate(`/admin/course/${courseId}`)}
+            className="bg-gray-200 text-gray-700 hover:bg-gray-300 px-6 py-2 rounded-lg"
           >
             Back to course
           </Button>
-          <Button disabled={isLoading} onClick={createLectureHandler}>
+          <Button
+            disabled={isLoading}
+            onClick={createLectureHandler}
+            className={`${
+              isLoading
+                ? "bg-blue-500 text-white cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700"
+            } px-6 py-2 rounded-lg flex items-center gap-2`}
+          >
             {isLoading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Please wait...
               </>
             ) : (
-              "Create lecture"
+              "Create Lecture"
             )}
           </Button>
         </div>
-        <div className="mt-10"></div>
-        {lectureLoading ? (
-          <p>Loading lectures...</p>
-        ) : lectureError ? (
-          <p>Failed to load lectures</p>
-        ) : !lectureData || lectureData.lectures.length === 0 ? (
-          <p>No lectures available</p>
-        ) : (
-          lectureData.lectures.map((lecture, index) => (
-            <Lecture
-              key={lecture._id}
-              lecture={lecture}
-              courseId={courseId}
-              index={index}
-            />
-          ))
-        )}
+
+        {/* Render Lectures */}
+        <div className="mt-8">
+          {lectureLoading ? (
+            <p className="text-gray-500">Loading lectures...</p>
+          ) : lectureError ? (
+            <p className="text-red-500">Failed to load lectures</p>
+          ) : !lectureData || lectureData.lectures.length === 0 ? (
+            <p className="text-gray-500">No lectures available</p>
+          ) : (
+            lectureData.lectures.map((lecture, index) => (
+              <Lecture
+                key={lecture._id}
+                lecture={lecture}
+                courseId={courseId}
+                index={index}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

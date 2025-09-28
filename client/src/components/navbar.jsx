@@ -29,32 +29,34 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 
 function Navbar() {
   const { user } = useSelector((Store) => Store.auth);
-  const [logoutUser, { data, isSuccess }] = useLogoutUserMutation();
+  const [logoutUser, { data, isSuccess, isError }] = useLogoutUserMutation();
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
     try {
       await logoutUser();
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error("Logout failed. Please try again.");
     }
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data?.message || "User logged out");
+      toast.success(data?.message || "User logged out successfully.");
       navigate("/login");
+    } else if (isError) {
+      toast.error("An error occurred while logging out.");
     }
-  }, [isSuccess, data, navigate]);
+  }, [isSuccess, isError, data, navigate]);
 
   return (
-    <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
-      {/* Desktop */}
-      <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
+    <div className="h-16 dark:bg-[#020817] bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 z-10 shadow-md">
+      {/* Desktop Navbar */}
+      <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full px-6">
         <div className="flex items-center gap-2">
-          <School size={"30"} />
+          <School size={"30"} className="text-indigo-600" />
           <Link to="/">
-            <h1 className="hidden md:block font-extrabold text-2xl">
+            <h1 className="hidden md:block font-extrabold text-2xl text-gray-800 dark:text-white">
               E-Learning
             </h1>
           </Link>
@@ -64,25 +66,41 @@ function Navbar() {
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Avatar>
+                <Avatar className="cursor-pointer">
                   <AvatarImage
                     src={user?.photoUrl || "https://github.com/shadcn.png"}
-                    alt="@shadcn"
+                    alt="User Avatar"
+                    className="w-10 h-10 object-cover rounded-full"
                   />
                   <AvatarFallback>CN</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuContent className="w-56 bg-white dark:bg-gray-800 shadow-lg rounded-md p-2">
+                <DropdownMenuLabel className="text-gray-700 dark:text-gray-300">
+                  My Account
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
-                    <Link to="/myLearning">My learning</Link>
+                    <Link
+                      to="/myLearning"
+                      className="text-gray-800 dark:text-white blink-on-hover"
+                    >
+                      My Learning
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/profile">Edit Profile</Link>
+                    <Link
+                      to="/profile"
+                      className="text-gray-800 dark:text-white blink-on-hover"
+                    >
+                      Edit Profile
+                    </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={logoutHandler}>
+                  <DropdownMenuItem
+                    onSelect={logoutHandler}
+                    className="text-red-500 dark:text-red-400"
+                  >
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -91,6 +109,7 @@ function Navbar() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onSelect={() => navigate("/admin/dashboard")}
+                      className="text-indigo-600 dark:text-indigo-400"
                     >
                       Dashboard
                     </DropdownMenuItem>
@@ -100,19 +119,30 @@ function Navbar() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="outline" onClick={() => navigate("/login")}>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/login")}
+                className="hover:bg-indigo-100 text-gray-800 dark:text-white"
+              >
                 Login
               </Button>
-              <Button onClick={() => navigate("/login")}>Signup</Button>
+              <Button
+                onClick={() => navigate("/login")}
+                className="bg-indigo-600 text-white hover:bg-indigo-700"
+              >
+                Signup
+              </Button>
             </div>
           )}
           <DarkMode />
         </div>
       </div>
 
-      {/* Mobile */}
+      {/* Mobile Navbar */}
       <div className="flex md:hidden items-center justify-between px-4 h-full">
-        <h1 className="font-extrabold text-2xl">E-learning</h1>
+        <h1 className="font-extrabold text-2xl text-gray-800 dark:text-white">
+          E-learning
+        </h1>
         <MobileNavbar user={user} logoutHandler={logoutHandler} />
       </div>
     </div>
@@ -129,31 +159,47 @@ const MobileNavbar = ({ user, logoutHandler }) => {
       <SheetTrigger asChild>
         <Button
           size="icon"
-          className="rounded-full hover:bg-gray-200"
+          className="rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           variant="outline"
         >
-          <Menu />
+          <Menu className="text-gray-800 dark:text-white" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col">
-        <SheetHeader className="flex flex-row items-center justify-between mt-2">
-          <SheetTitle>
+      <SheetContent className="flex flex-col space-y-4 bg-white dark:bg-gray-900 p-6">
+        <SheetHeader className="flex items-center justify-between mb-4">
+          <SheetTitle className="text-2xl text-gray-800 dark:text-white">
             <Link to="/">E-Learning</Link>
           </SheetTitle>
           <DarkMode />
         </SheetHeader>
-        <Separator className="mr-2 mt-2" />
+        <Separator className="mt-2" />
         <nav className="flex flex-col space-y-4 mt-4">
-          <Link to="/myLearning">My Learning</Link>
-          <Link to="/profile">Edit Profile</Link>
-          <button onClick={logoutHandler} className="text-left">
+          <Link
+            to="/myLearning"
+            className="text-lg text-gray-800 dark:text-white blink-on-hover"
+          >
+            My Learning
+          </Link>
+          <Link
+            to="/profile"
+            className="text-lg text-gray-800 dark:text-white blink-on-hover"
+          >
+            Edit Profile
+          </Link>
+          <button
+            onClick={logoutHandler}
+            className="text-lg text-left text-red-500 dark:text-red-400"
+          >
             Log out
           </button>
         </nav>
         {user?.role === "instructor" && (
           <SheetFooter className="mt-auto">
             <SheetClose asChild>
-              <Button onClick={() => navigate("/admin/dashboard")}>
+              <Button
+                onClick={() => navigate("/admin/dashboard")}
+                className="bg-indigo-600 text-white hover:bg-indigo-700"
+              >
                 Dashboard
               </Button>
             </SheetClose>

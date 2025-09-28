@@ -1,5 +1,5 @@
 import { User } from "../models/user.model.js";
-import bcrypt from "bcryptjs"; // ✅ Corrected Import
+import bcrypt from "bcryptjs"; 
 import { generateToken } from "../utils/generateToken.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
@@ -64,10 +64,9 @@ export const login = async (req, res) => {
       });
     }
 
-    // ✅ Token Generate Karo
+
     generateToken(res, user);
 
-    // ✅ Yahan JSON response bhejo
     res.status(200).json({
       success: true,
       message: `Login successful, ${user.name}`,
