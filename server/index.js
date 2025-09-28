@@ -103,7 +103,8 @@ app.use("/api/v1/purchase", purchaseRoute);
 app.use("/api/v1/progress", courseProgressRoute);
 
 // Test route
-app.get("/api/test", (req, res) => {
+// Test route
+app.get("/api/v1/test", (req, res) => {
   res.json({ message: "Backend is working 🚀" });
 });
 
