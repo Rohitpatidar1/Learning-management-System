@@ -23,7 +23,7 @@ import {
 import { useParams } from "react-router-dom";
 
 const MEDIA_API =
-  "http://learning-management-system-j7bb.onrender.com/api/v1/media";
+  "https://learning-management-system-2-dprm.onrender.com";
 
 function LectureTab() {
   const [lectureTitle, setLectureTitle] = useState("");
