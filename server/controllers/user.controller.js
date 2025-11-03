@@ -84,10 +84,18 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
-      message: "logged out successfully.",
-      success: true,
-    });
+    return res
+      .status(200)
+      .cookie("token", "", {
+        maxAge: 0,
+        httpOnly: true, // <-- Yeh add karein
+        secure: true, // <-- Yeh add karein
+        sameSite: "none", // <-- Yeh add karein
+      })
+      .json({
+        message: "logged out successfully.",
+        success: true,
+      });
   } catch (error) {
     return res.status(500).json({
       success: false,
