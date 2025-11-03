@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const COURSE_API =
-  "http://learning-management-system-j7bb.onrender.com/api/v1/course";
+  "https://learning-management-system-2-dprm.onrender.com/api/v1/course";
 
 export const courseApi = createApi({
   reducerPath: "courseApi",
